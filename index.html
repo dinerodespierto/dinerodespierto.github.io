@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¿Cuánto tendrías hoy? · Simulador Dinero Despierto</title>
+<meta name="description" content="Simulador gratis con datos reales: mira cuánto valdría hoy tu dinero si lo hubieras invertido en 2022, calcula tu retiro y lleva tu portafolio.">
+<meta name="theme-color" content="#0d0d0d">
+<meta property="og:type" content="website">
+<meta property="og:title" content="¿Cuánto valen hoy $1,000 invertidos en 2022?">
+<meta property="og:description" content="Simulador gratis de Dinero Despierto. Datos reales, actualizados cada día.">
+<meta property="og:url" content="https://dinerodespierto.github.io/">
+<meta property="og:image" content="https://dinerodespierto.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="canonical" href="https://dinerodespierto.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0d0d'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='26' font-weight='800' fill='%23F0C040' text-anchor='middle'%3EDD%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#0d0d0d; --card:#171717; --card2:#1f1a0a; --line:#2a2a2a; --line2:#3a3a3a;
+  --gold:#F0C040; --gold-d:#5c4a14; --txt:#ffffff; --txt2:#e5e5e5; --muted:#a3a3a3; --muted2:#8f8f8f;
+  --up:#4ade80; --down:#f87171;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Montserrat,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+button,input{font-family:inherit}
+button{cursor:pointer}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+@media (min-width:700px){
+  body{background:radial-gradient(circle at 50% 0,#1a160a 0,#0d0d0d 55%)}
+  .app{border-left:1px solid #1c1c1c;border-right:1px solid #1c1c1c;background:var(--bg)}
+}
+header.top{position:sticky;top:0;z-index:20;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 20px;border-bottom:1px solid #222;background:rgba(13,13,13,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.brand{border:0;background:none;padding:0;min-height:44px;font-size:15px;font-weight:800;letter-spacing:1.5px;color:var(--gold)}
+.top-r{display:flex;align-items:center;gap:10px}
+.fecha{font-size:11px;font-weight:600;color:var(--muted)}
+.avatar{width:44px;height:44px;border-radius:99px;border:1px solid var(--gold);background:var(--card2);color:var(--gold);font-size:13px;font-weight:800}
+main{flex:1;padding:20px 20px 110px}
+main.sin-nav{padding-bottom:40px}
+.stack{display:flex;flex-direction:column;gap:18px}
+h1{margin:0;font-size:26px;line-height:1.15;font-weight:800}
+h1.xl{font-size:36px;line-height:1.1}
+.sub{margin:8px 0 0;font-size:14px;line-height:1.5;color:#b5b5b5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.card.gold{background:var(--card2);border-color:var(--gold-d)}
+.lbl{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted)}
+.big{font-size:42px;font-weight:800;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.big.xl{font-size:48px}
+.t13{font-size:13px;line-height:1.45}
+.t14{font-size:14px;line-height:1.45}
+.muted{color:var(--muted)}
+.fine{margin:0;font-size:11px;line-height:1.55;color:var(--muted2)}
+.row{display:flex;align-items:center;gap:8px}
+.between{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.chip{min-height:44px;border-radius:12px;border:1px solid var(--line2);background:transparent;color:var(--txt);font-size:14px;font-weight:700;transition:background .15s,color .15s,border-color .15s}
+.chip[aria-pressed="true"]{background:var(--gold);color:#0d0d0d;border-color:var(--gold)}
+.chip small{display:block;font-size:10px;font-weight:600;opacity:.8}
+.pill{min-height:40px;padding:0 14px;border-radius:99px;border:1px solid var(--line2);background:transparent;color:var(--txt);font-size:13px;font-weight:700}
+.pill[aria-pressed="true"]{background:var(--gold);color:#0d0d0d;border-color:var(--gold)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{min-height:44px;border-radius:10px;border:0;background:transparent;color:#d4d4d4;font-size:14px;font-weight:800}
+.seg button[aria-pressed="true"]{background:var(--gold);color:#0d0d0d}
+.btn{min-height:52px;border-radius:14px;border:0;background:var(--gold);color:#0d0d0d;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;width:100%}
+.btn:hover{background:#f5cc55}
+.btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--txt)}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn.sm{min-height:48px;font-size:14px;border-radius:12px}
+.q{width:32px;height:32px;flex-shrink:0;border-radius:99px;border:1px solid var(--line2);background:transparent;color:var(--gold);font-size:13px;font-weight:800}
+.bar{height:10px;background:#262626;border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:10px;border-radius:99px;background:var(--gold);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.badge{font-size:13px;font-weight:700;border-radius:99px;padding:4px 10px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label,.flabel{font-size:13px;font-weight:600;color:#d4d4d4}
+input[type=range]{accent-color:var(--gold);width:100%;margin:0;height:32px}
+.inp{height:44px;border-radius:12px;border:1px solid var(--line2);background:var(--bg);color:var(--txt);padding:0 12px;font-size:16px;width:100%}
+.inp:focus{border-color:var(--gold);outline:none}
+.search{position:relative}
+.search svg{position:absolute;left:12px;top:13px}
+.search .inp{padding-left:38px}
+.item{min-height:58px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--txt);display:flex;align-items:center;gap:12px;padding:8px 14px;text-align:left;width:100%}
+.item[aria-pressed="true"]{border-color:var(--gold);background:#2a2412}
+.item .tk{width:52px;flex-shrink:0;font-size:13px;font-weight:800}
+.item[aria-pressed="true"] .tk{color:var(--gold)}
+.item .nm{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.item .nm b{font-size:13px}
+.item .nm span{font-size:11px;color:var(--muted)}
+.item .pc{font-size:13px;font-weight:800}
+.teaser{min-height:78px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--txt);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;text-align:left;width:100%;transition:border-color .3s,transform .15s}
+.teaser:active{transform:scale(.98)}
+.teaser.open{border-color:var(--gold-d)}
+.teaser .ver{font-size:12px;font-weight:700;color:#0d0d0d;background:var(--gold);border-radius:99px;padding:8px 12px;white-space:nowrap}
+.tag{align-self:flex-start;font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--gold);border:1px solid var(--gold-d);border-radius:99px;padding:6px 12px}
+.dashed{border:1px dashed var(--line2);border-radius:12px;padding:16px;font-size:13px;line-height:1.45;color:var(--muted)}
+.bars6{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;align-items:end;height:170px}
+.bars6 .col{display:flex;flex-direction:column;justify-content:flex-end;height:170px}
+.bars6 .col b{font-size:10px;color:var(--txt2);text-align:center;margin-bottom:4px}
+.bars6 .g{background:var(--gold);border-radius:4px 4px 0 0;transition:height .4s}
+.bars6 .a{background:#5a5a5a;transition:height .4s}
+.ages{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:6px;font-size:10px;color:var(--muted);text-align:center}
+.legend{display:flex;gap:12px;font-size:11px;color:var(--muted);flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:5px}
+.sw{width:8px;height:8px;border-radius:2px;display:inline-block}
+nav.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:20;height:calc(72px + env(safe-area-inset-bottom));padding:6px 8px calc(8px + env(safe-area-inset-bottom));border-top:1px solid #222;background:rgba(17,17,17,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;grid-template-columns:repeat(3,1fr)}
+nav.tabs button{border:0;background:none;color:#9a9a9a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:700}
+nav.tabs button[aria-current="page"]{color:var(--gold)}
+.hold{display:flex;align-items:center;gap:12px}
+.hold .ic{width:44px;height:44px;border-radius:12px;background:#262626;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hold .x{width:44px;height:44px;flex-shrink:0;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.alloc>i{display:block;height:12px}
+.alloc{display:flex;height:12px;border-radius:99px;overflow:hidden;background:#262626;gap:2px}
+.overlay{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.overlay.center{justify-content:center;padding:20px;gap:14px}
+.scrim{position:absolute;inset:0;border:0;padding:0;background:rgba(0,0,0,.78);animation:fade .2s}
+.sheet{position:relative;width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--line2);border-radius:20px 20px 0 0;padding:12px 24px calc(28px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:up .25s cubic-bezier(.2,.8,.2,1)}
+.grip{align-self:center;width:40px;height:4px;border-radius:99px;background:var(--line2)}
+.story-img{position:relative;width:min(252px,62vw);aspect-ratio:9/16;border-radius:18px;border:1px solid var(--line2);display:block;animation:pop .25s}
+.share-actions{position:relative;display:flex;flex-direction:column;gap:10px;width:min(300px,86vw)}
+.share-actions .btn.ghost{background:#171717}
+.share-actions p{margin:0;font-size:13px;line-height:1.5;color:var(--txt2);text-align:center}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--gold);color:#0d0d0d;font-weight:800;font-size:13px;padding:10px 16px;border-radius:99px;z-index:60;animation:pop .2s}
+@keyframes fade{from{opacity:0}}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.view{animation:fade .25s}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <button class="brand" type="button" data-go="intro">DINERO DESPIERTO</button>
+  <div class="top-r">
+    <span class="fecha" id="fechaTop"></span>
+    <button class="avatar" type="button" data-open="sobre" aria-label="Quién hizo esta app">DD</button>
+  </div>
+</header>
+<main id="main"></main>
+<nav class="tabs" id="tabs" hidden>
+  <button type="button" data-go="retiro"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Retiro</button>
+  <button type="button" data-go="comparar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>¿Y si hubiera…?</button>
+  <button type="button" data-go="portafolio"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12A9 9 0 1 1 12 3v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg>Mi portafolio</button>
+</nav>
+<div id="capa"></div>
+</div>
+<script id="datos">
+/* ===== DATOS DE MERCADO: los actualiza la tarea programada. No cambies la forma de este bloque. ===== */
+window.DATOS = {
+  fecha: '2026-09-21',
+  trm: 3192.92,
+  // [precio ajustado al 21 sep 2022, precio de cierre en "fecha"]
+  precios: {
+    SPY: [358.31, 773.50], QQQ: [277.22, 741.47], XLK: [61.65, 194.85], VT: [77.15, 160.90],
+    SCHG: [14.50, 36.26], SCHD: [20.17, 33.71], GLD: [155.79, 398.34],
+    AAPL: [150.77, 338.98], MSFT: [231.25, 501.66], NVDA: [13.21, 227.27], AMZN: [118.54, 258.44],
+    GOOGL: [98.34, 355.19], META: [140.88, 741.29], TSLA: [300.80, 375.18], KO: [52.87, 87.14],
+    INTC: [27.09, 121.78], NKE: [91.88, 36.10],
+    BND: [63.26, 71.40], TLT: [92.25, 81.80], SGOV: [84.16, 100.59]
+  },
+  // Cierres ajustados de fin de mes, uno por mes, empezando en septiembre de 2022
+  series: {
+    SPY: [339.12, 366.68, 387.07, 364.76, 387.70, 377.95, 391.97, 398.23, 400.07, 425.99, 439.94, 432.79, 412.26, 403.31, 440.15, 460.24, 467.57, 491.97, 508.06, 487.58, 512.24, 530.31, 536.73, 549.27, 560.81, 555.81, 588.95, 574.78, 590.22, 582.72, 550.25, 545.48, 579.76, 609.57, 623.60, 636.40, 659.07, 674.78, 676.10, 676.64, 686.61, 680.67, 647.06, 715.04, 752.67, 744.92, 745.18, 765.15],
+    QQQ: [261.28, 271.73, 286.80, 260.95, 288.72, 287.68, 314.99, 316.59, 341.55, 363.08, 377.09, 371.50, 352.63, 345.35, 382.71, 404.09, 411.44, 433.18, 438.70, 419.52, 445.32, 474.14, 466.18, 471.33, 483.68, 479.50, 505.16, 507.45, 518.43, 504.41, 466.15, 472.66, 516.04, 548.99, 562.30, 567.66, 598.18, 626.78, 616.99, 612.86, 620.40, 605.86, 576.54, 667.00, 737.50, 736.40, 687.99, 716.76],
+    XLK: [57.81, 62.23, 66.17, 60.74, 66.36, 66.63, 73.87, 73.78, 80.36, 85.22, 87.43, 86.11, 80.53, 80.57, 90.96, 94.76, 97.32, 101.90, 102.71, 96.79, 103.64, 111.76, 108.09, 108.84, 111.73, 109.98, 115.67, 115.26, 114.41, 111.79, 102.53, 104.26, 114.66, 125.95, 130.68, 130.54, 140.38, 149.75, 142.55, 143.62, 143.53, 138.42, 132.74, 159.31, 190.79, 190.52, 175.35, 186.50],
+    VT: [73.00, 77.65, 84.08, 80.35, 86.50, 83.75, 86.13, 87.36, 86.30, 91.32, 94.72, 92.03, 88.11, 85.54, 93.25, 98.06, 98.06, 102.46, 105.73, 101.94, 106.63, 108.32, 110.46, 113.04, 115.52, 113.01, 117.69, 114.23, 117.72, 117.24, 113.11, 113.75, 120.35, 125.98, 127.36, 131.13, 135.55, 138.29, 138.59, 139.86, 144.22, 146.59, 137.47, 150.27, 157.15, 156.55, 155.46, 160.14],
+    SCHG: [13.71, 14.32, 14.90, 13.67, 15.03, 14.84, 16.06, 16.28, 17.32, 18.49, 19.15, 18.96, 17.96, 17.69, 19.66, 20.52, 21.06, 22.51, 22.96, 22.05, 23.39, 25.00, 24.76, 25.20, 25.86, 25.74, 27.59, 27.70, 28.27, 27.11, 24.91, 25.29, 27.42, 29.09, 30.09, 30.39, 31.81, 33.27, 32.69, 32.55, 31.93, 30.67, 29.10, 32.88, 35.08, 33.84, 34.17, 35.66],
+    SCHD: [19.31, 21.47, 22.94, 22.16, 22.62, 21.87, 21.64, 21.46, 20.58, 21.67, 22.58, 22.25, 21.31, 20.50, 21.79, 23.16, 23.20, 23.62, 24.72, 23.61, 24.09, 24.10, 25.59, 26.19, 26.43, 26.48, 27.70, 25.86, 26.35, 27.02, 26.71, 24.66, 25.00, 25.56, 25.56, 26.93, 26.59, 26.05, 26.87, 26.99, 29.34, 31.26, 30.44, 31.82, 32.24, 31.71, 33.47, 34.89],
+    GLD: [154.67, 151.91, 164.81, 169.64, 179.41, 169.78, 183.22, 184.80, 182.32, 178.27, 182.35, 180.02, 171.45, 184.09, 188.75, 191.17, 188.45, 189.31, 205.72, 211.87, 215.30, 215.01, 226.55, 231.29, 243.06, 253.51, 245.59, 242.13, 258.56, 263.27, 288.14, 303.77, 303.60, 304.83, 302.96, 318.07, 355.47, 368.12, 387.88, 396.31, 444.95, 483.75, 430.29, 423.66, 417.12, 368.38, 371.54, 408.42],
+    AAPL: [135.55, 150.40, 145.43, 127.65, 141.76, 145.05, 162.26, 166.96, 174.65, 191.12, 193.57, 185.36, 168.93, 168.49, 187.66, 190.21, 182.18, 178.80, 169.63, 168.49, 190.43, 208.63, 219.98, 227.10, 231.07, 224.04, 235.62, 248.62, 234.30, 240.36, 220.77, 211.20, 199.88, 204.18, 206.57, 231.29, 253.69, 269.37, 278.09, 271.12, 258.78, 263.71, 253.34, 270.87, 311.79, 289.11, 308.64, 316.85],
+    MSFT: [225.39, 224.65, 247.61, 232.74, 240.50, 242.67, 280.49, 298.94, 320.20, 332.04, 327.54, 320.26, 308.52, 330.37, 370.99, 368.18, 389.27, 405.74, 412.69, 381.90, 407.94, 439.21, 411.10, 410.65, 423.61, 400.03, 417.71, 415.78, 409.42, 392.38, 371.03, 390.67, 455.85, 492.54, 528.28, 502.56, 513.72, 513.58, 488.91, 480.57, 427.58, 391.15, 368.68, 406.13, 449.39, 372.32, 463.85, 507.29],
+    NVDA: [12.10, 13.45, 16.87, 14.57, 19.47, 23.14, 27.69, 27.66, 37.71, 42.17, 46.59, 49.20, 43.37, 40.66, 46.63, 49.38, 61.35, 78.88, 90.10, 86.16, 109.32, 123.20, 116.70, 119.04, 121.12, 132.40, 137.88, 133.94, 119.76, 124.59, 108.11, 108.65, 134.79, 157.60, 177.43, 173.75, 186.13, 202.01, 176.58, 186.06, 190.68, 176.78, 174.00, 199.11, 210.66, 199.87, 200.53, 220.53],
+    AMZN: [113.00, 102.44, 96.54, 84.00, 103.13, 94.23, 103.29, 105.45, 120.58, 130.36, 133.68, 138.01, 127.12, 133.09, 146.09, 151.94, 155.20, 176.76, 180.38, 175.00, 176.44, 193.25, 186.98, 178.50, 186.33, 186.40, 207.89, 219.39, 237.68, 212.28, 190.26, 184.42, 205.01, 219.39, 234.11, 229.00, 219.57, 244.22, 233.22, 230.82, 239.30, 210.00, 208.27, 265.06, 270.64, 238.34, 271.58, 259.77],
+    GOOGL: [94.75, 93.62, 100.04, 87.40, 97.91, 89.21, 102.75, 106.33, 121.71, 118.57, 131.47, 134.89, 129.63, 122.91, 131.28, 138.37, 138.78, 137.15, 149.51, 161.25, 170.87, 180.64, 170.12, 162.03, 164.69, 169.92, 167.77, 188.20, 202.83, 169.29, 153.91, 158.06, 170.93, 175.62, 191.23, 212.17, 242.47, 280.46, 319.35, 312.39, 337.34, 311.15, 287.20, 384.32, 379.87, 357.14, 355.90, 339.13],
+    META: [134.50, 92.35, 117.07, 119.29, 147.67, 173.42, 210.10, 238.23, 262.42, 284.48, 315.83, 293.31, 297.60, 298.65, 324.30, 350.88, 386.74, 486.38, 481.86, 426.88, 463.26, 500.86, 471.66, 517.83, 569.17, 564.33, 571.03, 582.63, 685.79, 664.91, 574.04, 546.79, 644.88, 735.68, 770.91, 736.29, 732.47, 646.67, 646.27, 658.91, 715.22, 647.03, 571.60, 611.34, 631.92, 563.29, 556.71, 572.34],
+    TSLA: [265.25, 227.54, 194.70, 123.18, 173.22, 205.71, 207.46, 164.31, 203.93, 261.77, 267.43, 258.08, 250.22, 200.84, 240.08, 248.48, 187.29, 201.88, 175.79, 183.28, 178.08, 197.88, 232.07, 214.11, 261.63, 249.85, 345.16, 403.84, 404.60, 292.98, 259.16, 282.16, 346.46, 317.66, 308.27, 333.87, 444.72, 456.56, 430.17, 449.72, 430.41, 402.51, 371.75, 381.63, 435.79, 420.60, 311.21, 367.95],
+    KO: [49.86, 53.27, 57.01, 57.01, 54.96, 53.34, 56.03, 57.94, 53.88, 54.80, 56.36, 54.45, 51.35, 51.82, 54.03, 54.49, 55.00, 55.49, 57.02, 57.57, 58.65, 59.78, 62.68, 68.07, 67.96, 61.76, 61.06, 59.32, 60.49, 67.85, 68.75, 69.64, 69.21, 68.39, 65.63, 66.69, 64.60, 67.12, 71.23, 68.58, 73.38, 80.01, 75.11, 77.79, 78.04, 80.79, 87.07, 88.14],
+    INTC: [24.52, 27.05, 29.00, 25.49, 27.25, 24.33, 31.89, 30.32, 30.81, 32.77, 35.06, 34.56, 34.97, 35.90, 44.11, 49.59, 42.51, 42.61, 43.71, 30.16, 30.66, 30.77, 30.55, 22.04, 23.46, 21.52, 24.05, 20.05, 19.43, 23.73, 22.71, 20.10, 19.55, 22.40, 19.80, 24.35, 33.55, 39.99, 40.56, 36.90, 46.47, 45.61, 44.13, 94.48, 114.68, 139.63, 90.20, 89.51],
+    NKE: [76.54, 85.34, 101.00, 108.07, 117.60, 109.71, 113.59, 117.37, 97.50, 102.57, 102.58, 94.52, 89.16, 95.82, 102.82, 101.57, 94.99, 97.23, 88.24, 86.62, 89.24, 71.04, 70.56, 78.53, 83.70, 73.03, 74.58, 72.01, 73.19, 75.59, 60.72, 53.95, 57.96, 68.40, 71.92, 74.50, 67.50, 62.53, 62.57, 62.07, 60.22, 60.58, 51.80, 43.51, 45.34, 40.62, 41.27, 38.65],
+    BND: [61.86, 61.14, 63.38, 62.87, 64.95, 63.22, 64.91, 65.29, 64.53, 64.39, 64.31, 63.89, 62.31, 61.36, 64.14, 66.42, 66.32, 65.41, 65.97, 64.38, 65.46, 66.04, 67.59, 68.58, 69.48, 67.77, 68.50, 67.34, 67.75, 69.21, 69.22, 69.49, 69.02, 70.07, 69.88, 70.69, 71.47, 71.90, 72.33, 72.12, 72.27, 73.43, 72.15, 72.26, 72.46, 72.66, 71.73, 71.99],
+    TLT: [87.48, 82.27, 88.15, 85.84, 92.40, 87.92, 92.17, 92.48, 89.70, 89.89, 87.60, 84.85, 78.10, 73.84, 81.17, 88.21, 86.23, 84.29, 84.95, 79.47, 81.77, 83.25, 86.28, 88.10, 89.86, 84.95, 86.64, 81.11, 81.51, 86.16, 85.12, 83.96, 81.26, 83.43, 82.48, 82.49, 85.46, 86.64, 86.87, 84.56, 84.53, 88.45, 84.71, 84.00, 84.44, 85.43, 81.61, 82.21],
+    SGOV: [84.23, 84.40, 84.65, 84.97, 85.24, 85.55, 85.92, 86.21, 86.57, 86.98, 87.34, 87.76, 88.14, 88.53, 88.93, 89.32, 89.72, 90.12, 90.49, 90.89, 91.33, 91.69, 92.10, 92.54, 92.93, 93.31, 93.68, 94.04, 94.38, 94.69, 95.01, 95.35, 95.69, 96.01, 96.37, 96.74, 97.05, 97.40, 97.69, 98.03, 98.31, 98.59, 98.87, 99.17, 99.47, 99.76, 100.10, 100.38]
+  },
+  // CDT a 1 año renovado cada 21 de septiembre: [fecha de renovación, tasa E.A.]
+  cdt: [['2022-09-21', 0.11], ['2023-09-21', 0.1307], ['2024-09-21', 0.0963], ['2025-09-21', 0.0876], ['2026-09-21', 0.1026]]
+};
+/* ===== FIN DATOS DE MERCADO ===== */
+</script>
+<script>
+(function () {
+'use strict';
+const D = window.DATOS;
+const GOLD = '#F0C040', UP = '#4ade80', DOWN = '#f87171';
+const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const $ = (sel, root) => (root || document).querySelector(sel);
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const money = (v, d) => {
+  const n = Number.isFinite(v) ? v : 0, dd = d == null ? 0 : d;
+  return (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: dd, maximumFractionDigits: dd });
+};
+const pctOf = (x) => (x >= 1 ? '+' : '') + Math.round((x - 1) * 100) + '%';
+const colorOf = (x) => x >= 1 ? UP : DOWN;
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- Fechas ----------
+const fp = D.fecha.split('-').map(Number);
+const fechaTxt = fp[2] + ' ' + MESES[fp[1] - 1] + ' ' + fp[0];
+const mesesT = (fp[0] - 2022) * 12 + (fp[1] - 9) - (fp[2] < 21 ? 1 : 0);
+const haceTxt = (() => { const a = Math.floor(mesesT / 12), m = mesesT % 12; return a + (a === 1 ? ' año' : ' años') + (m ? ' y ' + m + (m === 1 ? ' mes' : ' meses') : ''); })();
+const mesDe = (i) => MESES[(8 + i) % 12] + ' ' + (2022 + Math.floor((8 + i) / 12));
+const cdtTasasTxt = D.cdt.filter((t) => t[0] <= D.fecha).map((t) => (t[1] * 100).toFixed(2).replace('.', ',') + '% en ' + t[0].slice(0, 4)).join(', ') + '; la de 2022 es aproximada';
+const trmTxt = '$' + D.trm.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// ---------- Activos ----------
+const CATS = [
+  { id: 'etf', lbl: 'ETFs', info: 'Una canasta de muchas empresas en una sola compra. La forma más sencilla de empezar.' },
+  { id: 'acc', lbl: 'Acciones', info: 'Compras un pedacito de una sola empresa. Más potencial y más riesgo: mira lo que pasó con Nike.' },
+  { id: 'bon', lbl: 'Bonos', info: 'Le prestas dinero a un gobierno o a empresas y te pagan intereses. Se mueven menos que las acciones, pero también pueden perder: mira TLT.' },
+  { id: 'tas', lbl: 'Tasas en dólares', info: 'Dinero de muy bajo riesgo que gana la tasa del Tesoro de EE.UU. Sirve para ahorros de corto plazo.' },
+  { id: 'cdt', lbl: 'CDTs', info: 'Depósito a término en pesos colombianos. Lo convertimos a dólares al inicio y al final para compararlo en la misma moneda.' }
+];
+const ACTIVOS = [
+  ['SPY', 'etf', 'S&P 500', 'Las 500 empresas más grandes de EE.UU.'],
+  ['QQQ', 'etf', 'Nasdaq 100', 'Las 100 más grandes del Nasdaq'],
+  ['XLK', 'etf', 'Tecnología EE.UU.', 'Sector tecnológico del S&P 500'],
+  ['VT', 'etf', 'Todo el mundo', 'Miles de empresas de todos los países'],
+  ['SCHG', 'etf', 'Crecimiento EE.UU.', 'Empresas grandes que crecen rápido'],
+  ['SCHD', 'etf', 'Dividendos EE.UU.', 'Empresas que reparten ganancias'],
+  ['GLD', 'etf', 'Oro', 'Sigue el precio del oro'],
+  ['AAPL', 'acc', 'Apple', 'iPhone, Mac, servicios'],
+  ['MSFT', 'acc', 'Microsoft', 'Windows, Office, nube'],
+  ['NVDA', 'acc', 'NVIDIA', 'Chips para inteligencia artificial'],
+  ['AMZN', 'acc', 'Amazon', 'Comercio en línea y nube'],
+  ['GOOGL', 'acc', 'Alphabet (Google)', 'Buscador, YouTube, nube'],
+  ['META', 'acc', 'Meta', 'Instagram, WhatsApp, Facebook'],
+  ['TSLA', 'acc', 'Tesla', 'Carros eléctricos y energía'],
+  ['KO', 'acc', 'Coca-Cola', 'Bebidas'],
+  ['INTC', 'acc', 'Intel', 'Procesadores'],
+  ['NKE', 'acc', 'Nike', 'Ropa y calzado deportivo'],
+  ['BND', 'bon', 'Bonos EE.UU. (total)', 'Gobierno y empresas, varios plazos'],
+  ['TLT', 'bon', 'Tesoro a 20+ años', 'Bonos del gobierno de largo plazo'],
+  ['SGOV', 'tas', 'Letras del Tesoro', 'Préstamos al gobierno de 0 a 3 meses'],
+  ['USD', 'tas', 'Efectivo en dólares', 'Guardado, sin invertir'],
+  ['CDT', 'cdt', 'CDT en pesos a 1 año', 'Renovado cada septiembre']
+].map((a) => ({ t: a[0], cat: a[1], nombre: a[2], desc: a[3] }));
+const byT = {};
+ACTIVOS.forEach((a) => { byT[a.t] = a; });
+
+const dia = (f) => new Date(f + 'T00:00:00Z').getTime();
+let cdtF = 1;
+D.cdt.forEach((tr, i) => {
+  const ini = dia(tr[0]);
+  const fin = Math.min(i + 1 < D.cdt.length ? dia(D.cdt[i + 1][0]) : Infinity, dia(D.fecha));
+  if (fin > ini) cdtF *= Math.pow(1 + tr[1], (fin - ini) / 86400000 / 365);
+});
+const cdtX = 4420.38 * cdtF / D.trm;
+const unaVez = (t) => t === 'CDT' ? cdtX : t === 'USD' ? 1 : D.precios[t][1] / D.precios[t][0];
+const ruta = (t) => {
+  if (t === 'USD') { const n = D.series.SPY.length; return { compra: new Array(n).fill(1), actual: 1 }; }
+  const ser = D.series[t];
+  if (!ser || !D.precios[t]) return null;
+  return { compra: [D.precios[t][0]].concat(ser.slice(1)), actual: D.precios[t][1] };
+};
+const cadaMes = (t, m) => {
+  const rt = ruta(t);
+  if (!rt) return null;
+  let u = 0;
+  rt.compra.forEach((p) => { u += m / p; });
+  return { valor: u * rt.actual, puesto: m * rt.compra.length, n: rt.compra.length };
+};
+
+const NOTAS = {
+  CDT: 'Parte de ese resultado depende del peso: el dólar pasó de $4.420 a $' + Math.round(D.trm).toLocaleString('es-CO') + '. Si el peso se debilita, el resultado en dólares cae aunque el CDT siga pagando.',
+  USD: 'Guardado no pierde dólares, pero sí poder de compra: la inflación en EE.UU. sube los precios cada año.',
+  NKE: 'No todas las empresas suben. Por eso se recomienda diversificar con ETFs en vez de apostar todo a una sola acción.',
+  TLT: 'Cuando las tasas de interés suben, los bonos de largo plazo pierden valor.',
+  NVDA: 'Un caso excepcional. Elegir al ganador por adelantado es muy difícil; un ETF amplio te da parte de ese crecimiento sin apostar a una sola empresa.'
+};
+const GLOSA = {
+  regla4: ['La regla del 4%', 'Si cada año retiras el 4% de tu portafolio, históricamente el dinero ha alcanzado para unos 30 años de retiro. Es una guía para hacer cuentas, no una garantía.'],
+  compuesto: ['Interés compuesto', 'Ganas rendimiento sobre lo que pusiste y también sobre lo que ya ganaste. Por eso, con el tiempo, la parte dorada de la gráfica termina siendo más grande que la gris.'],
+  inflacion: ['Descontando inflación', 'Los resultados están en dinero de hoy: lo que podrías comprar con ellos a los precios actuales. Así no te engaña un número grande que en el futuro compra menos.'],
+  dividendo: ['Dividendos', 'Es la parte de las ganancias que algunas empresas reparten a sus accionistas. En este simulador se reinvierten, o sea, se usan para comprar más del mismo activo.'],
+  etf: ['¿Qué es un ETF?', 'Un fondo que compra muchas acciones a la vez y que tú compras como si fuera una sola. Con un ETF del S&P 500 eres dueño de un pedacito de las 500 empresas más grandes de EE.UU.'],
+  acc: ['¿Qué es una acción?', 'Un pedacito de una empresa. Si a la empresa le va bien, tu pedacito vale más; si le va mal, vale menos. Por eso poner todo en una sola es más arriesgado.'],
+  bon: ['¿Qué es un bono?', 'Un préstamo que le haces a un gobierno o a una empresa a cambio de intereses. Cuando las tasas del mercado suben, los bonos que ya existen pierden valor, sobre todo los de largo plazo.'],
+  tas: ['Tasas en dólares', 'Las letras del Tesoro son préstamos de muy corto plazo al gobierno de EE.UU. Casi no se mueven de precio y pagan la tasa del momento. Sirven para guardar plata que vas a usar pronto.'],
+  cdt: ['¿Qué es un CDT?', 'Un certificado de depósito a término: le prestas al banco por un plazo fijo y te paga una tasa conocida. Aquí lo pasamos a dólares con la TRM, el precio oficial del dólar en Colombia.']
+};
+
+// ---------- Estado ----------
+const S = {
+  tab: 'intro',
+  edad: 25, retiro: 60, inicial: 1000, aporte: 100, meta: 1500, tasa: 7,
+  modo: 'unica', monto: 1000, montoMes: 100, etf: 'XLK', cat: 'etf', q: '',
+  abiertos: {},
+  holdings: null, nextId: 1
+};
+const guardarPf = () => { try { localStorage.setItem('dd_portafolio', JSON.stringify({ h: S.holdings, n: S.nextId })); } catch (e) { /* sin almacenamiento */ } };
+try {
+  const g = JSON.parse(localStorage.getItem('dd_portafolio') || 'null');
+  if (g && Array.isArray(g.h)) { S.holdings = g.h; S.nextId = g.n || g.h.length + 1; }
+} catch (e) { /* sin almacenamiento */ }
+if (!S.holdings) { S.holdings = [{ id: 1, t: 'SPY', q: 1, c: 640, ej: true }, { id: 2, t: 'XLK', q: 5, c: 150, ej: true }]; S.nextId = 3; }
+
+// ---------- Conteo animado ----------
+const ultimos = {};
+function contar(el, key, to, from0) {
+  if (!el) return;
+  const from = ultimos[key] != null ? ultimos[key] : from0;
+  ultimos[key] = to;
+  if (reduce || from === to) { el.textContent = money(to); return; }
+  const t0 = performance.now(), dur = 900;
+  const paso = (now) => {
+    const p = Math.min(1, (now - t0) / dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = money(from + (to - from) * e);
+    if (p < 1 && ultimos[key] === to) requestAnimationFrame(paso);
+  };
+  requestAnimationFrame(paso);
+}
+
+// ---------- Navegación ----------
+const main = $('#main'), tabs = $('#tabs'), capa = $('#capa');
+$('#fechaTop').textContent = 'Al ' + fechaTxt;
+function ir(tab) {
+  S.tab = tab;
+  tabs.hidden = tab === 'intro';
+  main.classList.toggle('sin-nav', tab === 'intro');
+  tabs.querySelectorAll('button').forEach((b) => { if (b.dataset.go === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  ({ intro: vIntro, retiro: vRetiro, comparar: vComparar, portafolio: vPortafolio })[tab]();
+  window.scrollTo(0, 0);
+  try { history.replaceState(null, '', tab === 'intro' ? location.pathname : '#' + tab); } catch (e) { /* ignorar */ }
+}
+document.addEventListener('click', (e) => {
+  const go = e.target.closest('[data-go]');
+  if (go) { ir(go.dataset.go); return; }
+  const op = e.target.closest('[data-open]');
+  if (op) { abrir(op.dataset.open, op.dataset.k); return; }
+  if (e.target.closest('[data-close]')) cerrar();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && capa.innerHTML) cerrar(); });
+
+// ---------- Capas (glosario, sobre mí, compartir) ----------
+let focoPrevio = null;
+function abrir(tipo, k) {
+  focoPrevio = document.activeElement;
+  if (tipo === 'glosa') {
+    const g = GLOSA[k] || GLOSA.etf;
+    capa.innerHTML = '<div class="overlay" role="dialog" aria-modal="true" aria-labelledby="gt"><button class="scrim" data-close aria-label="Cerrar"></button><div class="sheet"><div class="grip"></div><div id="gt" style="font-size:20px;font-weight:800;color:var(--gold)">' + esc(g[0]) + '</div><div style="font-size:15px;line-height:1.55;color:var(--txt2)">' + esc(g[1]) + '</div><button class="btn sm" data-close type="button">Entendido</button></div></div>';
+  } else if (tipo === 'sobre') {
+    capa.innerHTML = '<div class="overlay" role="dialog" aria-modal="true" aria-labelledby="st"><button class="scrim" data-close aria-label="Cerrar"></button><div class="sheet" style="gap:14px"><div class="grip"></div>' +
+      '<div class="row" style="gap:14px"><div style="width:64px;height:64px;flex-shrink:0;border-radius:99px;border:2px solid var(--gold);background:var(--card2);color:var(--gold);font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center">DD</div><div><div id="st" style="font-size:18px;font-weight:800">Dinero Despierto</div><div style="font-size:13px;color:var(--gold);font-weight:700">@dinero.despierto</div></div></div>' +
+      '<div style="font-size:15px;line-height:1.55;color:var(--txt2)">Soy Jerónimo, tengo 20 años y manejo cinco portafolios en dólares. En Instagram muestro con datos reales cómo invierto: lo que sale bien y lo que no.</div>' +
+      '<div class="t13 muted">Hice esta app para que veas con números, no con promesas, por qué vale la pena empezar hoy.</div>' +
+      '<a class="btn sm" href="https://www.instagram.com/dinero.despierto" target="_blank" rel="noopener">Seguir a @dinero.despierto</a></div></div>';
+  } else if (tipo === 'share') {
+    abrirCompartir();
+    return;
+  }
+  const b = capa.querySelector('.sheet .btn, .sheet a');
+  if (b) b.focus();
+}
+function cerrar() {
+  capa.innerHTML = '';
+  if (focoPrevio && focoPrevio.focus) focoPrevio.focus();
+}
+function toast(t) {
+  const d = document.createElement('div');
+  d.className = 'toast'; d.setAttribute('role', 'status'); d.textContent = t;
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 2200);
+}
+
+const ctaSeguir = '<div class="card gold stack" style="gap:10px"><div style="font-size:16px;font-weight:800;line-height:1.3">¿Quieres ver cómo lo hago yo?</div><div class="t13" style="color:var(--txt2)">En Instagram muestro mis portafolios reales, con lo que sale bien y lo que no. Sin promesas de hacerte rico.</div><a class="btn sm" href="https://www.instagram.com/dinero.despierto" target="_blank" rel="noopener">Seguir a @dinero.despierto</a></div>';
+const q = (k, lbl) => '<button type="button" class="q" data-open="glosa" data-k="' + k + '" aria-label="' + esc(lbl) + '">?</button>';
+
+// ================= INTRO =================
+function vIntro() {
+  const tz = [['NVDA', 'En NVIDIA', 'Una sola acción'], ['SPY', 'En el S&P 500', 'Las 500 empresas más grandes'], ['CDT', 'En un CDT', 'En pesos, pasado a dólares']];
+  main.innerHTML = '<div class="stack view" style="gap:20px;padding-top:8px">' +
+    '<div class="tag">SIMULADOR GRATUITO · DATOS REALES</div>' +
+    '<h1 class="xl">¿Cuánto valen hoy <span style="color:var(--gold)">$1,000</span> invertidos en 2022?</h1>' +
+    '<p class="sub" style="margin:0;font-size:15px">Toca cada tarjeta para ver la respuesta. Precios reales al cierre del ' + fechaTxt + '.</p>' +
+    '<div class="stack" style="gap:10px">' + tz.map((z) => {
+      const x = unaVez(z[0]), ab = !!S.abiertos[z[0]];
+      return '<button type="button" class="teaser' + (ab ? ' open' : '') + '" data-tz="' + z[0] + '" aria-expanded="' + ab + '"><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:800">' + z[1] + '</span><span style="font-size:12px;color:var(--muted)">' + z[2] + '</span></span>' +
+        (ab ? '<span style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="tzv" data-v="' + (1000 * x) + '" style="font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;color:' + (z[0] === 'NVDA' ? GOLD : '#fff') + '">' + money(1000 * x) + '</span><span style="font-size:12px;font-weight:700;color:' + colorOf(x) + '">' + pctOf(x) + '</span></span>' : '<span class="ver">Toca para ver</span>') + '</button>';
+    }).join('') + '</div>' +
+    (tz.every((z) => S.abiertos[z[0]]) ? '<div class="t14" style="color:var(--txt2);line-height:1.5">Misma plata, mismo día, resultados muy distintos. La diferencia estuvo en <strong style="color:var(--gold)">dónde</strong> la pusiste y en <strong style="color:var(--gold)">no sacarla</strong> cuando cayó.</div>' : '') +
+    '<button type="button" class="btn" data-go="comparar" style="min-height:56px;font-size:16px">Probar con otra inversión</button>' +
+    '<div class="grid2"><button type="button" class="btn ghost sm" data-go="retiro" style="font-size:13px">¿Cuánto tendría al retirarme?</button><button type="button" class="btn ghost sm" data-go="portafolio" style="font-size:13px">Llevar mi portafolio</button></div>' +
+    '<button type="button" data-open="sobre" style="border:0;background:none;color:var(--muted);display:flex;align-items:center;gap:12px;padding:8px 0;text-align:left;min-height:44px"><span style="width:36px;height:36px;flex-shrink:0;border-radius:99px;border:1px solid var(--gold);color:var(--gold);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">DD</span><span style="font-size:12px;line-height:1.45">Hecho por <strong style="color:#fff">@dinero.despierto</strong>. Educación financiera con datos reales, sin promesas.</span></button>' +
+    '<p class="fine">Contenido educativo, no es asesoría financiera. Rentabilidades pasadas no garantizan resultados futuros.</p>' +
+    '</div>';
+  main.querySelectorAll('[data-tz]').forEach((b) => b.addEventListener('click', () => {
+    const t = b.dataset.tz;
+    if (S.abiertos[t]) return;
+    S.abiertos[t] = true;
+    vIntro();
+    const el = main.querySelector('[data-tz="' + t + '"] .tzv');
+    if (el) { delete ultimos['tz' + t]; contar(el, 'tz' + t, Number(el.dataset.v), 1000); }
+    const nb = main.querySelector('[data-tz="' + t + '"]'); if (nb) nb.focus();
+  }));
+}
+
+// ================= RETIRO =================
+const SLIDERS = [
+  { k: 'edad', label: 'Tu edad hoy', min: 5, max: 74, step: 1, fmt: (v) => v + ' años' },
+  { k: 'retiro', label: 'Edad de retiro', min: 10, max: 75, step: 1, fmt: (v) => v + ' años' },
+  { k: 'inicial', label: 'Capital inicial', min: 0, max: 50000, step: 500, fmt: (v) => money(v) },
+  { k: 'aporte', label: 'Aporte mensual', min: 10, max: 2000, step: 10, fmt: (v) => money(v) },
+  { k: 'meta', label: 'Quiero vivir con (al mes)', min: 300, max: 6000, step: 100, fmt: (v) => money(v) }
+];
+function calcRetiro() {
+  const años = Math.max(1, S.retiro - S.edad), r = S.tasa / 100 / 12;
+  const fv = (y) => { const g = Math.pow(1 + r, y * 12); return S.inicial * g + S.aporte * (g - 1) / r; };
+  const total = fv(años), ingreso = total * 0.04 / 12, objetivo = S.meta * 300;
+  const gT = Math.pow(1 + r, años * 12);
+  const necesario = Math.max(0, (objetivo - S.inicial * gT) * r / (gT - 1));
+  return { años, fv, total, ingreso, llega: ingreso >= S.meta, progreso: Math.min(100, Math.round(ingreso / S.meta * 100)), necesario };
+}
+function vRetiro() {
+  const valPf = valorPortafolio();
+  main.innerHTML = '<div class="stack view">' +
+    '<div><h1>¿Cuánto tendrías al retirarte?</h1><p class="sub">Mueve los controles y mira cómo crece un aporte mensual con el interés compuesto.</p></div>' +
+    '<div class="card stack" style="gap:10px;padding:20px"><div class="lbl" id="rLbl"></div><div class="big" id="rTotal">$0</div>' +
+    '<div class="t14 row" style="color:var(--txt2);flex-wrap:wrap;gap:4px"><span>Eso te daría unos <strong style="color:#fff" id="rIng"></strong> para vivir, retirando el 4% anual.</span>' + q('regla4', '¿Qué es la regla del 4%?') + '</div>' +
+    '<div class="bar" style="margin-top:4px"><i id="rProg"></i></div><div class="t13" id="rMeta" style="font-weight:600"></div></div>' +
+    '<div class="card" style="padding:18px 16px 14px"><div class="between" style="align-items:center;margin-bottom:14px"><div class="row" style="gap:6px"><span style="font-size:13px;font-weight:700">Cómo crece tu portafolio</span>' + q('compuesto', '¿Qué es el interés compuesto?') + '</div>' +
+    '<div class="legend"><span><i class="sw" style="background:#5a5a5a"></i>Aportas</span><span><i class="sw" style="background:var(--gold)"></i>Rendimiento</span></div></div>' +
+    '<div class="bars6" id="rBars"></div><div class="ages" id="rAges"></div></div>' +
+    '<div class="card stack" id="rEspera" style="gap:12px"></div>' +
+    '<div class="stack" style="gap:16px">' + SLIDERS.map((s) => '<div class="field"><div class="between"><label for="s-' + s.k + '">' + s.label + '</label><span style="font-size:15px;font-weight:800" id="v-' + s.k + '"></span></div><input type="range" id="s-' + s.k + '" min="' + s.min + '" max="' + s.max + '" step="' + s.step + '" value="' + S[s.k] + '"></div>').join('') + '</div>' +
+    (valPf > 0 ? '<button type="button" class="btn ghost sm" id="usarPf" style="border-style:dashed;border-color:var(--gold-d);color:var(--gold);font-size:13px">Usar mi portafolio (' + money(valPf) + ') como capital inicial</button>' : '') +
+    '<div class="stack" style="gap:8px"><div class="row" style="gap:6px"><span class="flabel">Rentabilidad anual (descontando inflación)</span>' + q('inflacion', '¿Qué significa descontando inflación?') + '</div><div class="grid3" id="rTasas"></div></div>' +
+    ctaSeguir +
+    '<p class="fine">Proyección educativa, no asesoría financiera. El 7% se acerca al promedio histórico del S&amp;P 500 descontando inflación; los resultados reales varían año a año y pueden ser negativos.</p>' +
+    '</div>';
+  SLIDERS.forEach((s) => {
+    $('#s-' + s.k).addEventListener('input', (e) => {
+      const v = Number(e.target.value);
+      S[s.k] = v;
+      if (s.k === 'edad' && S.retiro <= v) { S.retiro = Math.min(75, v + 1); $('#s-retiro').value = S.retiro; }
+      if (s.k === 'retiro' && v <= S.edad) { S.edad = Math.max(5, v - 1); $('#s-edad').value = S.edad; }
+      pintarRetiro();
+    });
+  });
+  const up = $('#usarPf');
+  if (up) up.addEventListener('click', () => { S.inicial = Math.round(valPf); $('#s-inicial').value = Math.min(50000, S.inicial); pintarRetiro(); toast('Listo: tu portafolio es tu capital inicial'); });
+  pintarRetiro(true);
+}
+function pintarRetiro(primera) {
+  const R = calcRetiro();
+  SLIDERS.forEach((s) => { $('#v-' + s.k).textContent = s.fmt(S[s.k]); });
+  $('#rLbl').textContent = 'A LOS ' + S.retiro + ' AÑOS TENDRÍAS';
+  contar($('#rTotal'), 'rTotal', R.total, primera ? 0 : R.total);
+  $('#rIng').textContent = money(R.ingreso) + ' al mes';
+  $('#rProg').style.width = R.progreso + '%';
+  const m = $('#rMeta');
+  m.style.color = R.llega ? UP : 'var(--txt2)';
+  m.textContent = R.llega ? 'Llegas a tu meta de ' + money(S.meta) + ' al mes. Tu yo del futuro te lo agradece.' : 'Para llegar a ' + money(S.meta) + ' al mes necesitarías aportar unos ' + money(Math.ceil(R.necesario / 10) * 10) + ' mensuales.';
+  const pts = [1, 2, 3, 4, 5, 6].map((k) => Math.max(1, Math.round(R.años * k / 6)));
+  const maxV = R.total || 1, H = 130;
+  const short = (v) => v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1e3 ? '$' + Math.round(v / 1e3) + 'k' : '$' + Math.round(v);
+  $('#rBars').innerHTML = pts.map((y) => {
+    const t = R.fv(y), a = S.inicial + S.aporte * 12 * y;
+    const hT = Math.max(2, t / maxV * H), hA = Math.min(hT, a / maxV * H);
+    return '<div class="col"><b>' + short(t) + '</b><div class="g" style="height:' + (hT - hA).toFixed(1) + 'px"></div><div class="a" style="height:' + hA.toFixed(1) + 'px"></div></div>';
+  }).join('');
+  $('#rAges').innerHTML = pts.map((y) => '<span>' + (S.edad + y) + ' años</span>').join('');
+  const esp = $('#rEspera');
+  if (R.años - 5 >= 1) {
+    const rows = [0, 5, 10].filter((d) => d === 0 || R.años - d >= 1).map((d) => {
+      const v = R.fv(R.años - d);
+      return '<div class="between"><span class="t13" style="color:' + (d ? '#b5b5b5' : '#fff') + '">' + (d ? 'Si empiezas a los ' + (S.edad + d) : 'Si empiezas hoy (' + S.edad + ' años)') + '</span><span class="row" style="align-items:baseline"><span style="font-size:12px;font-weight:700;color:var(--down)">' + (d ? '−' + money(R.total - v) : '') + '</span><span style="font-size:15px;font-weight:800;color:' + (d ? '#fff' : GOLD) + '">' + money(v) + '</span></span></div>';
+    }).join('');
+    const dM = R.años - 10 >= 1 ? 10 : 5;
+    esp.hidden = false;
+    esp.innerHTML = '<div style="font-size:13px;font-weight:700">El costo de esperar</div>' + rows + '<div class="t13" style="color:var(--txt2);border-top:1px solid var(--line);padding-top:12px">Esperar ' + dM + ' años te cuesta ' + money(R.total - R.fv(R.años - dM)) + ', aunque en ese tiempo solo habrías dejado de aportar ' + money(S.aporte * 12 * dM) + '. El resto es interés compuesto que no alcanzó a trabajar.</div>';
+  } else { esp.hidden = true; }
+  $('#rTasas').innerHTML = [[5, 'Conservador'], [7, 'Histórico'], [10, 'Optimista']].map((t) => '<button type="button" class="chip" data-tasa="' + t[0] + '" aria-pressed="' + (S.tasa === t[0]) + '">' + t[0] + '%<small>' + t[1] + '</small></button>').join('');
+  $('#rTasas').querySelectorAll('[data-tasa]').forEach((b) => b.addEventListener('click', () => { S.tasa = Number(b.dataset.tasa); pintarRetiro(); }));
+}
+
+// ================= COMPARADOR =================
+function vComparar() {
+  main.innerHTML = '<div class="stack view">' +
+    '<div><h1>Si hubieras invertido hace ' + haceTxt + '…</h1><p class="sub">Desde el 21 sep 2022 hasta el cierre del ' + fechaTxt + '. Cada día que pasa, el número cambia.</p></div>' +
+    '<div id="cTop" class="stack"></div>' +
+    '<div class="field"><label for="c-buscar">Busca una acción o ETF</label><div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8f8f8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input class="inp" id="c-buscar" type="search" placeholder="Ej: Apple, NVDA, oro…" autocomplete="off" value="' + esc(S.q) + '"></div></div>' +
+    '<div id="cDyn" class="stack"></div>' +
+    '</div>';
+  $('#c-buscar').addEventListener('input', (e) => { S.q = e.target.value; pintarComparar(); });
+  pintarComparar(true);
+}
+function calcSel() {
+  const esMes = S.modo === 'mes';
+  let t = byT[S.etf] ? S.etf : 'XLK';
+  if (esMes && t === 'CDT') t = 'SPY';
+  const a = byT[t], monto = esMes ? S.montoMes : S.monto;
+  let valor, puesto, n = 0;
+  const dm = esMes ? cadaMes(t, monto) : null;
+  if (dm) { valor = dm.valor; puesto = dm.puesto; n = dm.n; } else { valor = monto * unaVez(t); puesto = monto; }
+  return { esMes, a, monto, valor, puesto, n, x: valor / puesto };
+}
+function grafica(sel) {
+  const rt = ruta(sel.a.t);
+  if (!rt || sel.a.t === 'USD') return null;
+  const W = 310, GH = 150;
+  let vals, base = null;
+  if (sel.esMes) {
+    let u = 0; vals = []; base = [];
+    rt.compra.forEach((p, j) => { u += sel.monto / p; vals.push(u * p); base.push(sel.monto * (j + 1)); });
+    vals.push(u * rt.actual); base.push(sel.monto * rt.compra.length);
+  } else {
+    const pts = rt.compra.concat([rt.actual]);
+    vals = pts.map((p) => sel.monto * p / pts[0]);
+  }
+  const todos = base ? vals.concat(base) : vals;
+  const lo = Math.min(...todos) * 0.95, hi = Math.max(...todos) * 1.03, n = vals.length;
+  const px = (i) => i / (n - 1) * W, py = (v) => 8 + (1 - (v - lo) / (hi - lo)) * (GH - 16);
+  const path = (arr) => arr.map((v, i) => (i ? 'L' : 'M') + px(i).toFixed(1) + ' ' + py(v).toFixed(1)).join(' ');
+  const g = { vals, linea: path(vals), base: base ? path(base) : '', n };
+  g.area = g.linea + ' L' + W + ' ' + GH + ' L0 ' + GH + ' Z';
+  g.finX = px(n - 1); g.finY = py(vals[n - 1]);
+  g.mid = mesDe(Math.round((n - 2) / 2));
+  if (sel.esMes) {
+    let peor = 0, iP = 0;
+    vals.forEach((v, i) => { const r = v / base[i] - 1; if (r < peor) { peor = r; iP = i; } });
+    g.minX = px(iP); g.minY = py(vals[iP]);
+    g.txt = peor < 0 ? 'Su peor momento ' + (iP === n - 1 ? 'es hoy' : 'fue en ' + mesDe(iP)) + ': ibas ' + Math.round(peor * 100) + '% frente a lo que habías puesto. ' + (sel.x >= 1 ? 'Quien siguió aportando, terminó ganando.' : 'Todavía no se recupera.') : 'Nunca estuviste en pérdida frente a lo que habías puesto.';
+  } else {
+    let pico = vals[0], iPi = 0, dd = 0, iF = 0, iPD = 0;
+    vals.forEach((v, i) => { if (v > pico) { pico = v; iPi = i; } const c = v / pico - 1; if (c < dd) { dd = c; iF = i; iPD = iPi; } });
+    g.minX = px(iF); g.minY = py(vals[iF]);
+    g.txt = dd < -0.02 ? 'Medido al cierre de cada mes, en su peor racha cayó un ' + Math.round(-dd * 100) + '% desde su punto más alto, ' + (iF === n - 1 ? 'hasta hoy' : 'hasta ' + mesDe(iF)) + '. ' + (vals[n - 1] >= vals[iPD] ? 'Quien no vendió en ese momento, se recuperó y siguió ganando.' : 'Y todavía no vuelve a ese máximo.') : 'En todo el período casi no tuvo caídas.';
+  }
+  return g;
+}
+let ultimaSel = null;
+function pintarComparar(primera) {
+  const sel = calcSel();
+  ultimaSel = sel;
+  const esMes = sel.esMes;
+  const lista = esMes ? [50, 100, 200, 500] : [100, 500, 1000, 5000];
+  $('#cTop').innerHTML = '<div class="seg" role="group" aria-label="Forma de invertir"><button type="button" data-modo="unica" aria-pressed="' + !esMes + '">Una sola vez</button><button type="button" data-modo="mes" aria-pressed="' + esMes + '">Cada mes</button></div>' +
+    '<div class="stack" style="gap:8px"><div class="flabel">' + (esMes ? 'Aporte mensual' : 'Monto invertido') + '</div><div class="grid4">' + lista.map((m) => '<button type="button" class="chip" data-monto="' + m + '" aria-pressed="' + (sel.monto === m) + '">' + money(m) + '</button>').join('') + '</div></div>';
+
+  const qq = S.q.trim().toLowerCase();
+  const sinTilde = (t) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const qn = sinTilde(qq);
+  const base = qq ? ACTIVOS.filter((a) => sinTilde(a.t + ' ' + a.nombre + ' ' + a.desc).split(/[^a-z0-9&]+/).some((w) => w.startsWith(qn))) : ACTIVOS.filter((a) => a.cat === S.cat);
+  const fil = esMes ? base.filter((a) => a.t !== 'CDT') : base;
+  const factor = (t) => { if (!esMes) return unaVez(t); const d = cadaMes(t, 1); return d ? d.valor / d.puesto : unaVez(t); };
+  const cat = CATS.find((c) => c.id === S.cat) || CATS[0];
+  const g = grafica(sel);
+
+  const refs = [sel.a.t, 'SPY', 'CDT', 'SGOV', 'USD'].filter((t, i, arr) => arr.indexOf(t) === i).filter((t) => !(esMes && t === 'CDT'))
+    .map((t) => { const dm = esMes ? cadaMes(t, sel.monto) : null; return { a: byT[t], v: dm ? dm.valor : sel.monto * unaVez(t) }; });
+  const maxC = Math.max(...refs.map((o) => o.v));
+
+  $('#cDyn').innerHTML =
+    (qq ? '' : '<div class="stack" style="gap:10px"><div class="row" style="flex-wrap:wrap">' + CATS.map((c) => '<button type="button" class="pill" data-cat="' + c.id + '" aria-pressed="' + (S.cat === c.id) + '">' + c.lbl + '</button>').join('') + '</div><div class="t13 row" style="color:#b5b5b5;align-items:flex-start"><span style="flex:1">' + cat.info + '</span>' + q(S.cat, 'Más sobre esta categoría') + '</div></div>') +
+    '<div class="stack" style="gap:8px">' + fil.map((a) => { const x = factor(a.t); return '<button type="button" class="item" data-t="' + a.t + '" aria-pressed="' + (a.t === sel.a.t) + '"><span class="tk">' + a.t + '</span><span class="nm"><b>' + esc(a.nombre) + '</b><span>' + esc(a.desc) + '</span></span><span class="pc" style="color:' + colorOf(x) + '">' + pctOf(x) + '</span></button>'; }).join('') +
+    (fil.length ? '' : '<div class="dashed">' + (qq && !base.length ? 'Todavía no tenemos «' + esc(S.q.trim()) + '». Pronto podrás buscar cualquier acción o ETF de EE.UU.' : 'El CDT lo comparamos solo con una inversión de una vez. Cambia a «Una sola vez» para verlo.') + '</div>') + '</div>' +
+    '<div class="card stack" style="gap:8px;padding:22px 20px 18px" id="cRes"><div class="t14" style="color:#d4d4d4">' + money(sel.monto) + (esMes ? ' al mes' : '') + ' en <strong style="color:#fff">' + esc(sel.a.nombre) + '</strong> hoy serían</div>' +
+    '<div class="big xl" id="cVal" style="color:' + (sel.x >= 1 ? GOLD : DOWN) + '">' + money(sel.valor) + '</div>' +
+    '<div class="row" style="flex-wrap:wrap;margin-top:4px"><span class="badge" style="color:#0d0d0d;background:' + colorOf(sel.x) + '">' + pctOf(sel.x) + '</span><span class="badge" style="background:#2a2a2a">' + (esMes ? 'Pusiste ' + money(sel.puesto) + ' en ' + sel.n + ' meses' : 'x' + sel.x.toFixed(2) + ' tu dinero') + '</span></div>' +
+    (g ? '<div class="stack" style="gap:6px;margin-top:10px"><svg viewBox="0 0 310 150" width="100%" role="img" aria-label="Evolución de ' + esc(sel.a.nombre) + ' desde septiembre de 2022" style="display:block;overflow:visible"><path d="' + g.area + '" fill="' + GOLD + '" fill-opacity=".12"/>' + (g.base ? '<path d="' + g.base + '" fill="none" stroke="#8a8a8a" stroke-width="1.5" stroke-dasharray="4 4"/>' : '') + '<path class="trazo" d="' + g.linea + '" fill="none" stroke="' + GOLD + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="' + g.minX.toFixed(1) + '" cy="' + g.minY.toFixed(1) + '" r="5" fill="#0d0d0d" stroke="' + DOWN + '" stroke-width="2.5"/><circle cx="' + g.finX.toFixed(1) + '" cy="' + g.finY.toFixed(1) + '" r="5" fill="' + GOLD + '"/></svg>' +
+      '<div class="between" style="font-size:10px;color:var(--muted2)"><span>sep 2022</span><span>' + g.mid + '</span><span>hoy</span></div>' +
+      (g.base ? '<div class="legend"><span><i style="width:14px;height:3px;background:var(--gold);border-radius:2px;display:inline-block"></i>Lo que vale</span><span><i style="width:14px;border-top:2px dashed #8a8a8a;display:inline-block"></i>Lo que pusiste</span></div>' : '') +
+      '<div class="t13 row" style="color:var(--txt2);align-items:flex-start"><i style="width:10px;height:10px;flex-shrink:0;margin-top:4px;border-radius:99px;border:2px solid var(--down);display:inline-block"></i><span>' + g.txt + '</span></div></div>' : '') +
+    '<div class="t13 muted" style="font-size:12px;margin-top:6px">' + (NOTAS[sel.a.t] || esc(sel.a.t + ' · ' + sel.a.desc + '.')) + '</div>' +
+    '<div class="grid2" style="margin-top:8px"><button type="button" class="btn sm" data-open="share"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg>Compartir</button><button type="button" class="btn ghost sm" data-open="glosa" data-k="dividendo" style="font-size:13px">¿Y los dividendos?</button></div></div>' +
+    '<div class="card stack" style="gap:14px"><div style="font-size:13px;font-weight:700">Mismo dinero, distintas decisiones</div>' + refs.map((o, i) => {
+      const bajo = o.v < sel.puesto;
+      return '<div class="stack" style="gap:6px"><div class="between t13"><span style="font-weight:700;color:var(--txt2)">' + esc(o.a.t === 'USD' || o.a.t === 'CDT' ? o.a.nombre : o.a.t + ' · ' + o.a.nombre) + '</span><span style="font-weight:800;color:' + (bajo ? DOWN : '#fff') + '">' + money(o.v) + '</span></div><div class="bar"><i style="width:' + (Math.max(0.02, o.v / maxC) * 100).toFixed(1) + '%;background:' + (i === 0 ? GOLD : bajo ? DOWN : o.a.t === 'USD' ? '#5a5a5a' : '#b8b8b8') + '"></i></div></div>';
+    }).join('') + '</div>' +
+    ctaSeguir +
+    '<button type="button" class="btn ghost" data-go="retiro">Calcula cuánto tendrías al retirarte</button>' +
+    '<p class="fine">Acciones, ETFs, bonos y tasas: variación de precio con dividendos e intereses reinvertidos, sin comisiones ni impuestos. «Cada mes» compra el 21 sep 2022 y luego al cierre de cada mes. CDT: renovado cada septiembre a la tasa DTF de ese momento (' + cdtTasasTxt + '), antes de retención, convertido con la TRM de $4.420,38 (21 sep 2022) y ' + trmTxt + ' (' + fechaTxt + '). Desde 2022 ha sido un período excepcional para la bolsa: rentabilidades pasadas no garantizan resultados futuros, y el promedio histórico está más cerca del 7% anual real. Contenido educativo, no es asesoría financiera.</p>';
+
+  contar($('#cVal'), 'cVal', sel.valor, primera ? sel.puesto : sel.valor);
+  const tr = $('#cDyn .trazo');
+  if (tr && !reduce && tr.getTotalLength) {
+    const L = tr.getTotalLength();
+    tr.style.strokeDasharray = L; tr.style.strokeDashoffset = L;
+    tr.getBoundingClientRect();
+    tr.style.transition = 'stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)';
+    tr.style.strokeDashoffset = 0;
+  }
+  $('#cTop').querySelectorAll('[data-modo]').forEach((b) => b.addEventListener('click', () => { S.modo = b.dataset.modo; pintarComparar(); }));
+  $('#cTop').querySelectorAll('[data-monto]').forEach((b) => b.addEventListener('click', () => { if (S.modo === 'mes') S.montoMes = Number(b.dataset.monto); else S.monto = Number(b.dataset.monto); pintarComparar(); }));
+  $('#cDyn').querySelectorAll('[data-cat]').forEach((b) => b.addEventListener('click', () => { S.cat = b.dataset.cat; pintarComparar(); }));
+  $('#cDyn').querySelectorAll('[data-t]').forEach((b) => b.addEventListener('click', () => {
+    S.etf = b.dataset.t; pintarComparar();
+    const r = $('#cRes'); if (r && r.getBoundingClientRect().top > window.innerHeight * 0.6) r.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  }));
+}
+
+// ---------- Imagen para compartir ----------
+function wrap(ctx, text, maxW) {
+  const words = text.split(' '), lines = [];
+  let line = '';
+  words.forEach((w) => { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; });
+  if (line) lines.push(line);
+  return lines;
+}
+function rrect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+async function crearImagen(sel) {
+  try { await document.fonts.load('800 60px Montserrat'); await document.fonts.load('700 40px Montserrat'); } catch (e) { /* usar fuente del sistema */ }
+  const W = 1080, H = 1920, c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const x = c.getContext('2d'), F = 'Montserrat, system-ui, sans-serif', P = 96;
+  x.fillStyle = '#0d0d0d'; x.fillRect(0, 0, W, H);
+  x.fillStyle = GOLD; x.font = '800 38px ' + F; x.fillText('DINERO DESPIERTO', P, 190);
+  x.fillStyle = '#e5e5e5'; x.font = '700 60px ' + F;
+  const l1 = sel.esMes
+    ? 'Si hubiera invertido ' + money(sel.monto) + ' al mes en ' + sel.a.nombre + ' desde septiembre de 2022, hoy tendría'
+    : 'Si hubiera invertido ' + money(sel.monto) + ' en ' + sel.a.nombre + ' en septiembre de 2022, hoy tendría';
+  let y = 470;
+  wrap(x, l1, W - 2 * P).forEach((ln) => { x.fillText(ln, P, y); y += 80; });
+  y += 110;
+  x.fillStyle = sel.x >= 1 ? GOLD : DOWN; x.font = '800 190px ' + F;
+  let vt = money(sel.valor), fs = 190;
+  while (x.measureText(vt).width > W - 2 * P && fs > 90) { fs -= 10; x.font = '800 ' + fs + 'px ' + F; }
+  x.fillText(vt, P, y);
+  y += 70;
+  x.font = '800 46px ' + F;
+  const pt = pctOf(sel.x), pw = x.measureText(pt).width + 56;
+  x.fillStyle = colorOf(sel.x); rrect(x, P, y, pw, 84, 42); x.fill();
+  x.fillStyle = '#0d0d0d'; x.fillText(pt, P + 28, y + 58);
+  if (sel.esMes) { x.fillStyle = '#a3a3a3'; x.font = '600 40px ' + F; x.fillText('Puse ' + money(sel.puesto) + ' en total', P + pw + 28, y + 56); }
+  const g = grafica(sel);
+  if (g) {
+    const gx = P, gy = 1180, gw = W - 2 * P, gh = 330, n = g.vals.length;
+    const lo = Math.min(...g.vals) * 0.95, hi = Math.max(...g.vals) * 1.03;
+    const px = (i) => gx + i / (n - 1) * gw, py = (v) => gy + (1 - (v - lo) / (hi - lo)) * gh;
+    x.beginPath(); g.vals.forEach((v, i) => (i ? x.lineTo(px(i), py(v)) : x.moveTo(px(i), py(v))));
+    x.lineTo(gx + gw, gy + gh + 20); x.lineTo(gx, gy + gh + 20); x.closePath();
+    x.fillStyle = 'rgba(240,192,64,0.12)'; x.fill();
+    x.beginPath(); g.vals.forEach((v, i) => (i ? x.lineTo(px(i), py(v)) : x.moveTo(px(i), py(v))));
+    x.strokeStyle = GOLD; x.lineWidth = 7; x.lineJoin = 'round'; x.lineCap = 'round'; x.stroke();
+    x.fillStyle = '#8f8f8f'; x.font = '600 30px ' + F; x.fillText('sep 2022', gx, gy + gh + 75);
+    const hw = x.measureText('hoy').width; x.fillText('hoy', gx + gw - hw, gy + gh + 75);
+  }
+  x.fillStyle = '#8f8f8f'; x.font = '600 30px ' + F;
+  x.fillText('Datos reales al ' + fechaTxt + '. No es asesoría financiera.', P, 1660);
+  x.fillStyle = '#2a2a2a'; x.fillRect(P, 1700, W - 2 * P, 2);
+  x.fillStyle = '#ffffff'; x.font = '800 54px ' + F; x.fillText('¿Y tú cuánto tendrías?', P, 1790);
+  x.fillStyle = GOLD; x.font = '700 42px ' + F; x.fillText('Calcúlalo en @dinero.despierto', P, 1856);
+  return new Promise((res) => c.toBlob((b) => res(b), 'image/png'));
+}
+async function abrirCompartir() {
+  const sel = ultimaSel || calcSel();
+  capa.innerHTML = '<div class="overlay center" role="dialog" aria-modal="true" aria-label="Compartir resultado"><button class="scrim" data-close aria-label="Cerrar"></button><div class="share-actions"><p>Preparando tu imagen…</p></div></div>';
+  const blob = await crearImagen(sel);
+  if (!blob) { cerrar(); toast('No se pudo crear la imagen'); return; }
+  const url = URL.createObjectURL(blob);
+  const nombre = 'dinero-despierto-' + sel.a.t.toLowerCase() + '.png';
+  const file = typeof File === 'function' ? new File([blob], nombre, { type: 'image/png' }) : null;
+  const puedeCompartir = !!(file && navigator.canShare && navigator.canShare({ files: [file] }));
+  capa.innerHTML = '<div class="overlay center" role="dialog" aria-modal="true" aria-label="Compartir resultado"><button class="scrim" data-close aria-label="Cerrar"></button>' +
+    '<img class="story-img" src="' + url + '" alt="Imagen para historias con tu resultado en ' + esc(sel.a.nombre) + '">' +
+    '<div class="share-actions">' +
+    (puedeCompartir ? '<button type="button" class="btn sm" id="shNative">Compartir en historias</button>' : '') +
+    '<a class="btn ' + (puedeCompartir ? 'ghost ' : '') + 'sm" id="shDown" href="' + url + '" download="' + nombre + '">Descargar imagen</a>' +
+    '<button type="button" class="btn ghost sm" id="shLink">Copiar enlace del simulador</button>' +
+    '<p>Súbela a tus historias y etiqueta a <strong style="color:var(--gold)">@dinero.despierto</strong>.</p>' +
+    '<button type="button" class="btn ghost sm" data-close>Cerrar</button></div></div>';
+  const n = $('#shNative');
+  if (n) n.addEventListener('click', async () => { try { await navigator.share({ files: [file], title: 'Mi resultado', text: '¿Y tú cuánto tendrías? ' + location.origin + location.pathname }); } catch (e) { /* cancelado */ } });
+  $('#shLink').addEventListener('click', async () => {
+    const link = location.origin + location.pathname;
+    try { if (navigator.share && !navigator.canShare) throw 0; await navigator.clipboard.writeText(link); toast('Enlace copiado'); }
+    catch (e) { try { await navigator.share({ url: link, title: 'Simulador Dinero Despierto' }); } catch (e2) { toast(link); } }
+  });
+  const f = $('#shNative') || $('#shDown'); if (f) f.focus();
+}
+
+// ================= PORTAFOLIO =================
+const PRECIOS = {};
+Object.keys(D.precios).forEach((t) => { PRECIOS[t] = D.precios[t][1]; });
+const precioDe = (h) => h.p != null ? h.p : (PRECIOS[h.t] || h.c);
+const valorPortafolio = () => S.holdings.reduce((a, h) => a + h.q * precioDe(h), 0);
+const PAL = [GOLD, '#f5f5f5', '#9a9a9a', '#c99a1a', '#6b6b6b', '#e8d9a8'];
+function vPortafolio() {
+  main.innerHTML = '<div class="stack view">' +
+    '<div><h1>Mi portafolio</h1><p class="sub">Registra tus compras y mira cuánto vale hoy lo que tienes. Se guarda solo en este dispositivo.</p></div>' +
+    '<div id="pDyn" class="stack"></div>' +
+    '<form class="card stack" id="pForm" style="gap:12px" novalidate><div style="font-size:14px;font-weight:800">Agregar compra</div>' +
+    '<div class="grid2">' +
+    '<div class="field"><label for="f-t">Ticker</label><input class="inp" id="f-t" name="t" type="text" placeholder="VOO" autocapitalize="characters" autocomplete="off" style="text-transform:uppercase;font-weight:700" list="tickers"></div>' +
+    '<div class="field"><label for="f-q">Cantidad</label><input class="inp" id="f-q" name="q" type="number" inputmode="decimal" min="0" step="any" placeholder="1.5"></div>' +
+    '<div class="field"><label for="f-c">Precio de compra</label><input class="inp" id="f-c" name="c" type="number" inputmode="decimal" min="0" step="any" placeholder="150"></div>' +
+    '<div class="field"><label for="f-p">Precio actual</label><input class="inp" id="f-p" name="p" type="number" inputmode="decimal" min="0" step="any" placeholder="Opcional"></div>' +
+    '</div><datalist id="tickers">' + Object.keys(PRECIOS).map((t) => '<option value="' + t + '">').join('') + '</datalist>' +
+    '<div id="fErr" class="t13" style="color:var(--down);font-weight:600" role="alert"></div>' +
+    '<button class="btn sm" type="submit">Agregar al portafolio</button>' +
+    '<div class="fine" style="font-size:11px">Los tickers del comparador traen su precio de cierre del ' + fechaTxt + ' y se actualizan solos. Para otros, escribe el precio actual; si lo dejas vacío se usa el de compra.</div></form>' +
+    '<button type="button" class="btn ghost" data-go="retiro">¿Cuánto tendría al retirarme con esto?</button>' +
+    '</div>';
+  $('#f-t').addEventListener('input', (e) => { const t = e.target.value.trim().toUpperCase(); $('#f-p').placeholder = PRECIOS[t] ? String(PRECIOS[t]) : 'Opcional'; });
+  $('#pForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const t = $('#f-t').value.trim().toUpperCase(), qn = parseFloat($('#f-q').value), c = parseFloat($('#f-c').value);
+    let p = parseFloat($('#f-p').value); if (!(p > 0)) p = null;
+    const err = $('#fErr');
+    if (!t) { err.textContent = 'Escribe el ticker, por ejemplo VOO.'; $('#f-t').focus(); return; }
+    if (!(qn > 0)) { err.textContent = 'La cantidad debe ser mayor que cero.'; $('#f-q').focus(); return; }
+    if (!(c > 0)) { err.textContent = 'Escribe el precio al que compraste.'; $('#f-c').focus(); return; }
+    err.textContent = '';
+    if (S.holdings.some((h) => h.ej)) S.holdings = S.holdings.filter((h) => !h.ej);
+    const ex = S.holdings.find((h) => h.t === t);
+    if (ex) { const qN = ex.q + qn; ex.c = (ex.q * ex.c + qn * c) / qN; ex.q = Math.round(qN * 10000) / 10000; if (p) ex.p = p; }
+    else S.holdings.push({ id: S.nextId++, t, q: qn, c, p });
+    guardarPf();
+    e.target.reset();
+    pintarPortafolio();
+    toast(t + ' agregado');
+  });
+  pintarPortafolio();
+}
+function pintarPortafolio() {
+  const val = valorPortafolio(), costo = S.holdings.reduce((a, h) => a + h.q * h.c, 0), pnl = val - costo;
+  const pos = pnl >= 0, ej = S.holdings.some((h) => h.ej);
+  const rows = S.holdings.map((h, i) => {
+    const v = h.q * precioDe(h), cst = h.q * h.c, pl = v - cst;
+    return { h, v, pl, pct: cst > 0 ? pl / cst * 100 : 0, peso: val > 0 ? v / val * 100 : 0, color: PAL[i % PAL.length] };
+  });
+  $('#pDyn').innerHTML =
+    (ej ? '<div class="dashed" style="border-color:var(--gold-d);color:var(--txt2)">Esto es un ejemplo. Cuando agregues tu primera compra, se reemplaza por tu portafolio real.</div>' : '') +
+    '<div class="card stack" style="gap:14px;padding:20px"><div><div class="lbl">VALOR TOTAL</div><div style="font-size:38px;font-weight:800;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums">' + money(val, 2) + '</div>' +
+    '<div class="t14" style="font-weight:700;margin-top:4px;color:' + (pos ? UP : DOWN) + '">' + (pos ? '+' : '') + money(pnl, 2) + ' (' + (costo > 0 ? (pos ? '+' : '') + (pnl / costo * 100).toFixed(1) : '0.0') + '%) desde que compraste</div></div>' +
+    '<div class="alloc">' + rows.map((r) => '<i style="width:' + r.peso.toFixed(1) + '%;background:' + r.color + '"></i>').join('') + '</div>' +
+    '<div class="row" style="flex-wrap:wrap;gap:6px 14px">' + rows.map((r) => '<span class="row" style="gap:6px;font-size:12px;color:#d4d4d4"><i class="sw" style="background:' + r.color + '"></i>' + esc(r.h.t) + ' ' + Math.round(r.peso) + '%</span>').join('') + '</div>' +
+    '<div class="between" style="font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px"><span>Invertido: <strong style="color:var(--txt2)">' + money(costo, 2) + '</strong></span><span>' + rows.length + ' posiciones</span></div></div>' +
+    '<div class="stack" style="gap:10px">' + (rows.length ? rows.map((r) => '<div class="card hold" style="padding:14px"><div class="ic" style="color:' + r.color + '">' + esc(r.h.t) + '</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700">' + money(r.v, 2) + '</div><div style="font-size:11px;color:var(--muted);margin-top:2px">' + r.h.q + (r.h.q === 1 ? ' unidad' : ' unidades') + ' · compra ' + money(r.h.c, 2) + '</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:800;color:' + (r.pl >= 0 ? UP : DOWN) + '">' + (r.pl >= 0 ? '+' : '') + r.pct.toFixed(1) + '%</div><div style="font-size:11px;margin-top:2px;color:' + (r.pl >= 0 ? UP : DOWN) + '">' + (r.pl >= 0 ? '+' : '') + money(r.pl, 2) + '</div></div><button type="button" class="x" data-quitar="' + r.h.id + '" aria-label="Quitar ' + esc(r.h.t) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>').join('') : '<div class="dashed" style="text-align:center">Aún no tienes posiciones. Agrega tu primera compra abajo.</div>') + '</div>';
+  $('#pDyn').querySelectorAll('[data-quitar]').forEach((b) => b.addEventListener('click', () => {
+    S.holdings = S.holdings.filter((h) => String(h.id) !== b.dataset.quitar); guardarPf(); pintarPortafolio();
+  }));
+}
+
+// ---------- Arranque ----------
+const inicio = (location.hash || '').slice(1);
+ir(['retiro', 'comparar', 'portafolio'].includes(inicio) ? inicio : 'intro');
+})();
+</script>
+</body>
+</html>
