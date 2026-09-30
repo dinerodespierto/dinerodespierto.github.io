@@ -16,7 +16,7 @@ import yfinance as yf
 
 INDEX = Path(__file__).with_name("index.html")
 TICKERS = ["SPY", "QQQ", "XLK", "VT", "SCHG", "SCHD", "GLD", "AAPL", "MSFT", "NVDA",
-           "AMZN", "GOOGL", "META", "TSLA", "KO", "INTC", "NKE", "BND", "TLT", "SGOV"]
+           "AMZN", "GOOGL", "META", "TSLA", "KO", "INTC", "NKE", "NOK", "BND", "TLT", "SGOV"]
 INICIO = "2022-09-21"
 INI = "/* ===== DATOS DE MERCADO"
 FIN = "/* ===== FIN DATOS DE MERCADO ===== */"
